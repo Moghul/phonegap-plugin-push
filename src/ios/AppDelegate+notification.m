@@ -81,6 +81,15 @@ NSString *const pushPluginApplicationDidBecomeActiveNotification = @"pushPluginA
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"didReceiveNotification with fetchCompletionHandler");
 
+    id clearAllNotifications = [userInfo objectForKey:@"clearAllNotifications"];
+    if (([clearAllNotifications isKindOfClass:[NSString class]] && [clearAllNotifications isEqualToString:@"true"]) || [clearAllNotifications boolValue]) {
+        NSLog(@"PushPlugin clearing notifications");
+
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    }
+
     // app is in the background or inactive, so only call notification callback if this is a silent push
     if (application.applicationState != UIApplicationStateActive) {
 
